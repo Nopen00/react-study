@@ -3,6 +3,7 @@ npm create vite@latest
 // 프로젝트명 넣어주고 시작 가능
 // npm create vite@latest 프로젝트명
 npm create vite@latest hello-react-project
+npm install tailwindcss @tailwindcss/vite
 
 =====================================
 
@@ -39,4 +40,11 @@ npm run build : 서버에 올려서 사용자들에게 웹페이지로 배포될
 
 npm run preview : build를 통해 나온 결과물을 테스트 하는 단계
 
+
+Card.module.css
+
+기본 : 부모가 렌더링 되면 자식도 렌더링됨
+	자식 컴포넌트의 state값이 변경이 되면 자식 컴포넌트만 리렌더링
+
+부모가 렌더링 될때 자식의 컴포넌트에 영향을 끼치지 않는다면 자식의 렌더링 막는게 효율적 => React.memo()
 
