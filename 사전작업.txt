@@ -2,8 +2,14 @@ npm create vite@latest
 
 // 프로젝트명 넣어주고 시작 가능
 // npm create vite@latest 프로젝트명
-npm create vite@latest hello-react-project
+npm create vite@latest tictoc
 npm install tailwindcss @tailwindcss/vite
+
+vite.config.ts 에 아래 추가
+	import tailwindcss from '@tailwindcss/vite'
+	디파인 컴피그 안에 tailwindcss(), 
+
+src/index.css 내용 다 지우고 @import "tailwindcss"; 붙여넣기
 
 =====================================
 
