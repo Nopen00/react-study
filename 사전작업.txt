@@ -2,8 +2,10 @@ npm create vite@latest
 
 // 프로젝트명 넣어주고 시작 가능
 // npm create vite@latest 프로젝트명
-npm create vite@latest tictoc
+npm create vite@latest react03-lifecycle
 npm install tailwindcss @tailwindcss/vite
+// 라우터 쓴다면 이것도
+npm install react-router-dom
 
 vite.config.ts 에 아래 추가
 	import tailwindcss from '@tailwindcss/vite'

@@ -1,19 +1,36 @@
 import { useState } from 'react';
 import type { Squares } from '../types/type';
 import Square from './Square'
+import { calculateWinner } from '../utils/util';
 
-const Board = () => {
-    const initialSquares: Squares = Array(9).fill(null)
-    // 9개의 Square 의 state 관리
-    const [squares, setSquares] = useState(initialSquares)
-    // X나 O 를 관리
-    const [isNext, setIsNext] = useState(true)
+interface BoardProps {
+    isNext: boolean;
+    squares: Squares;
+    handlePlay: (nextSquares: Squares) => void;
+}
+
+const Board = ({isNext, squares, handlePlay}:BoardProps) => {
+    // const initialSquares: Squares = Array(9).fill(null)
+    // // 9개의 Square 의 state 관리
+    // const [squares, setSquares] = useState(initialSquares)
+    // // X나 O 를 관리
+    // const [isNext, setIsNext] = useState(true)
+
+    // 승자 관리
+    const winner = calculateWinner(squares)
+
+    let status = '';
+    if (winner) {
+        status = 'Winner : ' + winner;
+    } else {
+        status = 'Next Player : ' + (isNext ? 'X' : 'O');
+    }
 
 
 
     const handleclick = (idx:number) => {
         //이미 선택된 박스라면 선택 불가
-        if(squares[idx]) return;
+        if(squares[idx] || calculateWinner(squares)) return;
 
         // 기존 배열 복사
         // const copySquares = [...squares]
@@ -25,11 +42,13 @@ const Board = () => {
             copySquares[idx] = 'O'
         }
         // 사용자가 선택한 square 의 값 변경
-        setIsNext(!isNext)
-        setSquares(copySquares)
+        // setIsNext(!isNext)
+        // setSquares(copySquares)
+        handlePlay(copySquares)
     }
     return (
         <div>
+            <div>{status}</div>
             <div className='board-row'>
                 <Square value = {squares[0]} handleclick = {() => handleclick(0)}></Square>
                 <Square value = {squares[1]} handleclick = {() => handleclick(1)}></Square>
