@@ -2,7 +2,7 @@ npm create vite@latest
 
 // 프로젝트명 넣어주고 시작 가능
 // npm create vite@latest 프로젝트명
-npm create vite@latest todoApp
+npm create vite@latest react05-global-state
 npm install tailwindcss @tailwindcss/vite
 npm install react-icons
 // 라우터 쓴다면 이것도

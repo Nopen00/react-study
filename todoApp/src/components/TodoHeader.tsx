@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Header } from '../types/todo';
 
-function TodoHeader(getTodosByCompleted) {
+function TodoHeader({getTodosByCompleted} : {getTodosByCompleted :(completed: string)=>void}) {
   console.log('TodoHeader rendered');
   return (
     <div className="flex p-3">
@@ -11,7 +11,7 @@ function TodoHeader(getTodosByCompleted) {
         <select
           name="completed"
           className="mx-2 rounded border border-gray-400"
-          onChange={(e) => (e.target.value)}
+          onChange={(e) => getTodosByCompleted(e.target.value)}
           >
           {[
           {label: '전체', value: '' },
