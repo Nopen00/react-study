@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useAuth, type SignupState } from "../common/AuthContext";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import type { SignupState } from "../authSlice";
 
 const Signup = () => {
   const [form, setForm] = useState<SignupState>({ id: "", password: "", name: "" });
   const { id, password, name } = form;
 
   // 로그인 함수 가져오기(useContext)
-  const { login, isLoggedIn } = useAuth();
+  const auth = useAppSelector((state)=> state.auth)
+  const dispatch = useAppDispatch()
   // react-router-dom
   const navigate = useNavigate();
 
@@ -34,7 +36,7 @@ const Signup = () => {
     navigate("/login");
   };
 
-  if (isLoggedIn) {
+  if (auth.id) {
     return <Navigate to={"/mypage"} replace />;
   }
 

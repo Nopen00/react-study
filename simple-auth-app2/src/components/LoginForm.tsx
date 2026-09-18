@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth, type LoginFormState } from "../common/AuthContext";
+import { login, type LoginFormState } from "../authSlice";
+import { useAppDispatch, useAppSelector } from "../hooks";
+
 
 const LoginForm = () => {
   const [form, setForm] = useState<LoginFormState>({ id: "", password: "" });
   const { id, password } = form;
 
-  // 로그인 함수 가져오기(useContext)
-  const { login, isLoggedIn } = useAuth();
+  const auth = useAppSelector((state)=> state.auth)
+  const dispatch = useAppDispatch()
+
   // react-router-dom
   const navigate = useNavigate();
 
@@ -31,12 +34,12 @@ const LoginForm = () => {
     }
 
     //login() 함수 사용
-    login(id, password);
+    dispatch(login({id, password}));
     //mypage 로 이동하기
     navigate("/mypage");
   };
 
-  if (isLoggedIn) {
+  if (auth.id) {
     return <p>이미 로그인된 상태입니다.</p>;
   }
 

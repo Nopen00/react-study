@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../common/AuthContext";
+import { useAppDispatch, useAppSelector } from "../hooks";
 
 const Home = () => {
-  const { isLoggedIn } = useAuth();
+  
+  const auth = useAppSelector((state)=> state.auth)
+  const dispatch = useAppDispatch()
+
+
+
+
+
   return (
     <main className="min-h-[calc(100vh-65px)] bg-gray-50">
       <section className="mx-auto flex max-w-5xl flex-col items-center px-6 py-24 text-center">
