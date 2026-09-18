@@ -2,17 +2,36 @@ npm create vite@latest
 
 // 프로젝트명 넣어주고 시작 가능
 // npm create vite@latest 프로젝트명
-npm create vite@latest simple-auth-app
+npm create vite@latest react06-redux-toolkit
 npm install tailwindcss @tailwindcss/vite
 npm install react-icons
 // 라우터 쓴다면 이것도
 npm install react-router-dom
+// 리덕스 쓴다면 이것
+npm install react-redux @reduxjs/toolkit
 
 vite.config.ts 에 아래 추가
 	import tailwindcss from '@tailwindcss/vite'
 	디파인 컴피그 안에 tailwindcss(), 
 
+src/main.tsx 에 BrowserRouter로 App 감싸기
+
 src/index.css 내용 다 지우고 @import "tailwindcss"; 붙여넣기
+src/App.css 다지우기
+src/App.tsx return문 내부 다 지우기
+/* 예시
+	import './App.css'
+
+	function App() {
+	return (
+		<>
+		
+		</>
+	)
+	}
+
+	export default App
+*/
 
 =====================================
 

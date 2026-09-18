@@ -4,6 +4,8 @@ import Navigation from './components/Navigation'
 import Home from './components/Home'
 import LoginForm from './components/LoginForm'
 import MyPage from './components/MyPage'
+import ProtectedRouter from './commont/ProtectedRouter'
+import Signup from './components/Signup'
 
 function App() {
 
@@ -12,8 +14,11 @@ function App() {
       <Navigation />
       <Routes>
         <Route path='/' element = {<Home/>}/>
-        <Route path='/login' element = {<LoginForm/>}/>
-        <Route path='/mypage' element = {<MyPage/>}/>
+        <Route path='/login' element = {<LoginForm/>}/> 
+        <Route path='/signup' element = {<Signup/>}/> 
+        <Route element = {<ProtectedRouter/>}>
+          <Route path='/mypage' element = {<MyPage/>}/>
+        </Route>
       </Routes>
     </>
   )

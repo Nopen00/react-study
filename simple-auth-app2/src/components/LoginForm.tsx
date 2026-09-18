@@ -1,20 +1,19 @@
 import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useAuth, type LoginFormState } from "../commont/AuthContext";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth, type LoginFormState } from "../common/AuthContext";
 
 const LoginForm = () => {
-  const [form, setForm] = useState<LoginFormState>({ id:"", password:"" });
-  const {id,password} = form
+  const [form, setForm] = useState<LoginFormState>({ id: "", password: "" });
+  const { id, password } = form;
 
-  // 로그인 함수 거져오기(useContext)
-  const {login, isLoggedIn} = useAuth();
-  // react-route-dom
+  // 로그인 함수 가져오기(useContext)
+  const { login, isLoggedIn } = useAuth();
+  // react-router-dom
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // id, password 둘다 적용
-    // 어디서 발생한 이벤트 인가
+    // id, password 둘 다 적용
+    // 어디서 발생한 이벤트인가?
     const { name, value } = e.target;
 
     setForm({
@@ -23,21 +22,22 @@ const LoginForm = () => {
     });
   };
 
-  const handleLogin = (e:React.SubmitEvent) => {
+  const handleLogin = (e: React.SubmitEvent) => {
     e.preventDefault();
-    // id, password 값이 없다면 alert('아이디나 비밀번호를 확인해 주세요')
-    if(!form.id.trim() || !form.password?.trim()){
-        alert('아이디나 비밀번호를 확인해 주세요')
-        return
+    //id,password 값이 없다면 alert('아이디나 비밀번호를 확인해주세요')
+    if (!id.trim() || !password.trim()) {
+      alert("아이디나 비밀번호를 확인해주세요");
+      return;
     }
-    // login() 함수 사용
-    login(id,password)
-    // mypage 로 이동하기
-    navigate('/mypage');
+
+    //login() 함수 사용
+    login(id, password);
+    //mypage 로 이동하기
+    navigate("/mypage");
   };
 
-  if(isLoggedIn){
-    return <p>이미 로그인된 상태입니다.</p>
+  if (isLoggedIn) {
+    return <p>이미 로그인된 상태입니다.</p>;
   }
 
   return (

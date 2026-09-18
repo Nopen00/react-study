@@ -14,7 +14,7 @@ export type LoginFormState = {
   password: string;
 };
 
-export type SignupState = LoginFormState & {name:string};
+export type SignupState = LoginFormState & { name: string };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 

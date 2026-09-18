@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../commont/AuthContext";
 
 const Home = () => {
+    const {isLoggedIn} = useAuth();
+    
     return (
         <main className="min-h-[calc(100vh-65px)] bg-gray-50">
             <section className="mx-auto flex max-w-5xl flex-col items-center px-6 py-24 text-center">
@@ -29,12 +32,18 @@ const Home = () => {
                         로그인
                     </Link>
 
-                    <Link
-                        to="/mypage"
-                        className="rounded-lg border border-gray-300 bg-white px-6 py-3 font-medium text-gray-700 transition hover:bg-gray-100"
-                    >
-                        마이페이지
-                    </Link>
+                    {/* 로그인 정보가 있다면 */}
+                    {isLoggedIn && (
+                        <>
+                            <Link
+                                to="/mypage"
+                                className="rounded-lg border border-gray-300 bg-white px-6 py-3 font-medium text-gray-700 transition hover:bg-gray-100"
+                            >
+                                마이페이지
+                            </Link>
+                        </>
+                    )}
+                    
                 </div>
 
                 {/* Feature Cards */}

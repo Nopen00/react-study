@@ -1,9 +1,11 @@
 
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../commont/AuthContext";
 
 
 const Navigation = () => {
-    
+    const {logout, isLoggedIn} = useAuth();
+    const navigate = useNavigate();
 
     const getLinkClass = ({ isActive }: { isActive: boolean }) =>
         `transition ${isActive
@@ -30,26 +32,39 @@ const Navigation = () => {
                         홈
                     </NavLink>
 
+                    {/* 로그인 정보가 있을때만 보여주기 */}
+                    {isLoggedIn ? (
+                        <>
+                            <NavLink to="/mypage" className={getLinkClass}>
+                                마이페이지
+                            </NavLink>
 
-                    <NavLink to="/mypage" className={getLinkClass}>
-                        마이페이지
-                    </NavLink>
 
 
-
-                    <button
-
-                        className="rounded-lg bg-gray-900 px-4 py-2 font-medium text-white transition hover:bg-gray-700"
-                    >
-                        로그아웃
-                    </button>
-
-                    <Link
-                        to="/login"
-                        className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700"
-                    >
-                        로그인
-                    </Link>
+                            <button
+                                onClick={()=> {logout(); navigate('/')}}
+                                className="rounded-lg bg-gray-900 px-4 py-2 font-medium text-white transition hover:bg-gray-700"
+                            >
+                                로그아웃
+                            </button>
+                        </>
+                    ) : <>
+                        <Link
+                            to="/signup"
+                            className="rounded-lg bg-gray-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700"
+                        >
+                            회원가입
+                        </Link>
+                        <Link
+                            to="/login"
+                            className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700"
+                        >
+                            로그인
+                        </Link>
+                    </>}
+                    
+                    
+                    
 
                 </div>
             </nav>
