@@ -1,10 +1,10 @@
 import axios from "axios";
 import type { BoardUpSert } from "../types/board";
 
-const url = "https://jsonplaceholder.typicode.com/posts";
+const url = "http://127.0.0.1:8000/boards";
 
-export const getBoards = async (limit: number = 10) => {
-  const response = await axios.get(`${url}?_limit=${limit}`);
+export const getBoards = async () => {
+  const response = await axios.get(`${url}`);
   return response.data;
 };
 
@@ -34,3 +34,7 @@ export const putBoard = async (id: string, board:BoardUpSert) => {
 };
 
 // 댓글 가져오기
+export const getBoardComments = async (id:string) => {
+  const response = await axios.get(`${url}/${id}/comments`);
+  return response.data;
+};

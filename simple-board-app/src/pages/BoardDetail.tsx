@@ -90,6 +90,16 @@ const BoardDetail = () => {
                 </div>
             </article>
             {/* 댓글 보여주기 post/${id}/comments */}
+            <section className="rounded-xl border border-slate-200 bg-white">
+                <ul>
+                    {board?.comments.map((comment)=> (
+                        <li key = {comment.id}>
+                            {comment.body} - {comment.name}
+                        </li>
+                    ))}
+                </ul>
+
+            </section>
         </div>
     );
 };

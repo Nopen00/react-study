@@ -7,4 +7,12 @@ export type Board = {
     'body': string;
 }
 
-export type BoardUpSert = Omit<Board,'id'> & {id?:number}
+export type Comment = {
+    'postId': number;
+    'id': number;
+    'name': string;
+    'email': string;
+    'body': string;
+}
+
+export type BoardUpSert = Board & {comments:Comment[]}

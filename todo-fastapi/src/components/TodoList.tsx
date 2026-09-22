@@ -1,0 +1,22 @@
+import type { Todo, TodosProps } from '../types/todo';
+import TodoListItem from './TodoListItem';
+
+const TodoList = ({todos, onDelete, onUpdate}:TodosProps) => {
+
+  return (
+    <div>
+      {todos.map((todo)=> (
+        <TodoListItem 
+        todo = {todo} 
+        key = {todo.id} 
+        onDelete={onDelete} 
+        onUpdate={onUpdate}
+        />
+        ))}
+      
+
+    </div>
+  );
+};
+
+export default TodoList;

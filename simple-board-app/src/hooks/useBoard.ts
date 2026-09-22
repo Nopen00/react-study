@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { getBoard } from "../apis/boardApi";
-import type { Board } from "../types/board";
+import { getBoard, getBoardComments } from "../apis/boardApi";
+import type { BoardUpSert } from "../types/board";
 
 
 
 const useBoard = (id:string|undefined) =>{
-    const [board, setBoards] = useState<Board|null>(null);
+    const [board, setBoard] = useState<BoardUpSert|null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     useEffect(() => {
             const fetchData = async () => {
@@ -14,7 +14,14 @@ const useBoard = (id:string|undefined) =>{
                     if(!id) return
                     // 서버로 데이터 요청
                     const serverData = await getBoard(id);
-                    setBoards(serverData);
+                    const serverCommentData = await getBoardComments(id);
+                    setBoard({
+                        userId:serverData.userId,
+                        id:serverData.id,
+                        title:serverData.title,
+                        body:serverData.body,
+                        comments:serverCommentData,
+                    });
                 } catch (error) {
                     console.log(error);
                 } finally {
