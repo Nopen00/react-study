@@ -1,39 +1,13 @@
-export const initialTodos = [
-  {
-    id: 1,
-    title: 'react 기초 알아보기',
-    completed: true,
-    important: true,
-    createDate: new Date(),
-    lastModifiedDate: new Date(),
-  },
-  {
-    id: 2,
-    title: '컴포넌트 스타일링해 보기',
-    completed: true,
-    important: false,
-    createDate: new Date(),
-    lastModifiedDate: new Date(),
-  },
-  {
-    id: 3,
-    title: '일정관리 앱 만들어보기',
-    completed: false,
-    important: false,
-    createDate: new Date(),
-    lastModifiedDate: new Date(),
-  },
-];
-
 // Todo 타입 지정
 // insert 할때 id 입력 안함, 날짜 입력 안함 => 자도응로 생성
+// Todoresponse
 export type Todo= {
-  id?: number;
+  id: number;
   title: string;
   completed : boolean;
   important : boolean;
-  createDate?: Date;
-  lastModifiedDate?: Date;
+  create_at: Date;
+  update_at: Date;
 }
 
 // TodoList 타입

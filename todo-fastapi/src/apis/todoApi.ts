@@ -36,7 +36,7 @@ export const deleteTodo = async (id: string) => {
 };
 
 // 수정
-export const putTodo = async (id: number, todo:TodoUpsert) => {
+export const putTodo = async (id: number, todo:{completed:boolean}) => {
   const response = await axios.put(`${url}/${id}`, todo);
   return response.data;
 };
