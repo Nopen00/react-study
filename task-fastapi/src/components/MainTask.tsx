@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddTask from "./AddTask";
 import ListTask from "./ListTask";
+import { useSearchParams } from "react-router-dom";
+import Pagination from "./Pagination";
+import { deleteTask, getTasks, postTask, putTask } from "../apis/tastApi";
 
 export type TaskProps = {
   id: number;
@@ -8,47 +11,84 @@ export type TaskProps = {
   done: boolean;
 };
 
-const initialTasks: TaskProps[] = [
-  { id: 0, text: "Visit Kafka Museum", done: true },
-  { id: 1, text: "Watch a puppet show", done: false },
-  { id: 2, text: "Lennon Wall pic", done: false },
-];
+export type TaskPageResponse = {
+  items: TaskProps[];
+  total: number;
+  total_pages: number;
+  page: number;
+  size: number;
+};
 
-let nextId = 3;
+
+const initData = {
+  items:[],
+  total: 0,
+  page : 1,
+  size : 10,
+  completed: null,
+  total_pages: 1,
+};
 
 const MainTask = () => {
   // 여행계획
-  const [tasks, setTasks] = useState<TaskProps[]>(initialTasks);
+  const [tasks, setTasks] = useState<TaskPageResponse>(initData);
+  const {total_pages} = tasks
+
+  // param 가져오기
+  const [searchParams, setSearchParams] = useSearchParams()
+  const page = Number(searchParams.get('page')) || 1;
+  const size = Number(searchParams.get('size')) || 10;
 
   // 여행계획 추가 함수
-  const handleAddTask = (text: string) => {
-    // tasks 에 내용 추가
-    // tasks.push('') => X
-    setTasks([
-      ...tasks,
-      {
-        id: nextId++,
-        text: text,
-        done: false,
-      },
-    ]);
+  const handleAddTask = async(text: string) => {
+    await postTask({text:text, done: false})
+    if (page == 1){
+      const tasks = await getTasks(1,size)
+      setTasks(tasks);
+    } else{ 
+      setSearchParams({
+        page: String(1),
+        size: String(size),
+      })
+    }
   };
   // 여행계획 수정
   // text 내용 수정, done 완료 여부 수정
-  const handleUpdateTask = (task: TaskProps) => {
-    setTasks(tasks.map((t)=>(t.id === task.id ? {...t,...task}:t)))
+  const handleUpdateTask = async(task: TaskProps) => {
+    await putTask(String(task.id),task)
+
+    const tasks = await getTasks(page,size)
+    setTasks(tasks)
     // const task = tasks.find((t) => )
     
 
 
   };
   // 여행계획 제거
-  const handleRemoveTask = (taskId: number) => {
-    //taskId : id
-    // tasks 에서 taskId와 일치하지 않는 tasks 추출해서 새로운 배열로 생성
-    setTasks(tasks.filter((task) => task.id !== taskId));
+  const handleRemoveTask =async(taskId: number) => {
+    await deleteTask(String(taskId))
+    const tasks = await getTasks(page,size)
+    setTasks(tasks);
   };
 
+  const onPageChange = async(newPage: number) => {
+    // 사용자가 클릭한 페이지 값으로 페이지 가져오기
+    // const tasks = await getTasks(newPage,size)
+    // setTasks(tasks)
+    setSearchParams({
+      page:String(newPage),
+      size:String(size),
+    })
+  };
+
+  useEffect(() => {
+    const fetchTasks = async (page: number, size: number) => {
+      const tasks = await getTasks(page, size);
+      setTasks(tasks);
+    };
+
+  fetchTasks(page, size);
+}, [page, size]);
 
   return (
     <div className="mt-10 flex justify-center">
@@ -56,12 +96,14 @@ const MainTask = () => {
         <h2 className="text-center text-2xl font-semibold">체코 프라하 여행</h2>
         <AddTask handleAddTask={handleAddTask} />
         <ListTask
-          tasks={tasks}
+          tasks={tasks.items}
           onEditTask={handleUpdateTask}
           handleUpdateTask={handleUpdateTask}
           handleRemoveTask = {handleRemoveTask}
         />
+        <Pagination page = {page} totalPages={total_pages} onPageChage={onPageChange}/>
       </div>
+      
     </div>
   );
 };

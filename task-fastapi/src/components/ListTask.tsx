@@ -80,7 +80,7 @@ const ListTask = ({ tasks, handleUpdateTask,handleRemoveTask }: TaskListProps) =
   return (
     <div className="space-y-3">
       {tasks.map((task) => (
-        <ItemTask task={task} handleRemoveTask={handleRemoveTask} handleUpdateTask={handleUpdateTask} />
+        <ItemTask key={task.id} task={task} handleRemoveTask={handleRemoveTask} handleUpdateTask={handleUpdateTask} />
       ))}
     </div>
   );

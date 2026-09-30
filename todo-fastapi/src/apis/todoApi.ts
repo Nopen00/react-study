@@ -3,12 +3,19 @@
 
 
 import axios from "axios";
-import type { TodoCreate, TodoUpsert } from "../types/todo";
+import type { TodoCreate } from "../types/todo";
 
 const url = "http://127.0.0.1:8000/todos";
 
-export const getTodos = async () => {
-  const response = await axios.get(`${url}`);
+export const getTodos = async (completedFilter: boolean | null,page:number,size:number) => {
+  // completedFilter null => {}
+  // completedFilter t/f => {completed:completedFilter}
+  const params : {page: number;size:number;completed?:boolean|null} = {page,size}
+  if(completedFilter !== null) { 
+    params.completed = completedFilter; 
+  }
+
+  const response = await axios.get(`${url}/`, { params });
   return response.data;
 };
 
