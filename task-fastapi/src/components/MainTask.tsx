@@ -11,6 +11,11 @@ export type TaskProps = {
   done: boolean;
 };
 
+export type TaskAdd = {
+  text: string;
+  done: boolean;
+};
+
 export type TaskPageResponse = {
   items: TaskProps[];
   total: number;

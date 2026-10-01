@@ -3,7 +3,7 @@ import type { BoardUpSert } from "../types/board";
 
 const url = "http://127.0.0.1:8000/boards";
 
-export const getBoards = async () => {
+export const getBoards = async (page:number, size:number) => {
   const response = await axios.get(`${url}`);
   return response.data;
 };
