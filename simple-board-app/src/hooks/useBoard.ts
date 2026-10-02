@@ -1,37 +1,43 @@
 import { useEffect, useState } from "react";
 import { getBoard, getBoardComments } from "../apis/boardApi";
-import type { BoardUpSert } from "../types/board";
+import type { BoardResponse } from "../types/board";
 
-
+export const initialBoard:BoardResponse={
+    id:0,
+    title:'',
+    contents:'',
+    user_id:10,
+    created_at:'',
+    user:{
+        user_id:0,
+        name:'',
+    },
+    comments:[],
+}
 
 const useBoard = (id:string|undefined) =>{
-    const [board, setBoard] = useState<BoardUpSert|null>(null);
+    const [board, setBoard] = useState<BoardResponse>(initialBoard);
     const [loading, setLoading] = useState<boolean>(true);
-    useEffect(() => {
-            const fetchData = async () => {
-                try {
-                    // id가 없는경우
-                    if(!id) return
-                    // 서버로 데이터 요청
-                    const serverData = await getBoard(id);
-                    const serverCommentData = await getBoardComments(id);
-                    setBoard({
-                        userId:serverData.userId,
-                        id:serverData.id,
-                        title:serverData.title,
-                        body:serverData.body,
-                        comments:serverCommentData,
-                    });
-                } catch (error) {
-                    console.log(error);
-                } finally {
-                    setLoading(false);
-                }
-            };
-            fetchData();
-        }, [id]);
+    
+    const fetchData = async () => {
+        try {
+            // id가 없는경우
+            if(!id) return
+            // 서버로 데이터 요청
+            const serverData = await getBoard(id);
+            setBoard(serverData);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    return {board,loading}
+    useEffect(() => {
+        fetchData();
+    },[id])
+
+    return {board,loading, refresh:fetchData}
 }
 
 export default useBoard

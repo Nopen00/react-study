@@ -123,7 +123,7 @@ const BoardList = () => {
                 </td>
 
                 <td className="px-6 py-5 text-center text-slate-500">
-                  {post.userId}
+                  {post.user_id}
                 </td>
 
                 <td className="px-6 py-5 text-center text-slate-400">

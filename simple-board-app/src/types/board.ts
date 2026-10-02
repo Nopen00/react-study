@@ -2,7 +2,7 @@
 
 
 export type BoardCreate = {
-    'userId': number;
+    'user_id': number;
     'title': string;
     'contents': string;
 }
@@ -13,13 +13,42 @@ export type BoardUpdate = {
     'contents': string;
 }
 
+export type UserResopnse = {
+    'user_id':number
+    'name': string
+}
+
+
+export type CommentResponse = {
+    'comment_id': number;
+    'body': string;
+    'user': UserResopnse;
+    'name': string
+    'board_id': number;
+    'created_at': string;
+}
+
+
+export type CommentCreate = {
+    body: string;
+    user_id:number;
+    board_id: number;
+}
+
+
+export type CommentUpdate = {
+    body: string;
+}
+
 
 export type BoardResponse = {
     'id': number;
     'title': string;
     'contents': string;
-    'userId': number;
+    'user_id': number;
     'created_at': string;
+    'user':UserResopnse
+    'comments': CommentResponse[]
 }
 
 

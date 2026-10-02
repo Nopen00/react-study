@@ -1,37 +1,24 @@
 import { Link } from "react-router-dom";
+import { getRecentBoards } from "../apis/boardApi";
+import { useEffect, useState } from "react";
+import type { Board, BoardResponse } from "../types/board";
 
 const Home = () => {
     {/* 외부에서 가져올 데이터 */ }
-    const recentPosts = [
-        {
-            id: 1,
-            title: "React Router와 Redux Toolkit 질문입니다",
-            author: "재현",
-            date: "2026.09.17",
-            views: 42,
-        },
-        {
-            id: 2,
-            title: "REST API 연습하고 있습니다",
-            author: "민수",
-            date: "2026.09.17",
-            views: 31,
-        },
-        {
-            id: 3,
-            title: "TailwindCSS 사용하면서 느낀 점",
-            author: "지수",
-            date: "2026.09.16",
-            views: 28,
-        },
-        {
-            id: 4,
-            title: "프론트엔드 개발 공부 기록",
-            author: "철수",
-            date: "2026.09.16",
-            views: 19,
-        },
-    ];
+
+
+    const [recentPosts, setRecentPosts] = useState<BoardResponse[]>([])
+
+    useEffect(()=>{
+        const recent = async() =>{
+            const serverData = await getRecentBoards()
+            setRecentPosts(serverData)
+        }
+
+        recent()
+    },[])
+
+    
 
     return (
         <div>
@@ -180,9 +167,9 @@ const Home = () => {
                                     </h3>
 
                                     <div className="mt-2 flex gap-3 text-xs text-slate-400">
-                                        <span>{post.author}</span>
-                                        <span>{post.date}</span>
-                                        <span>조회 {post.views}</span>
+                                        <span>{post.user_id}</span>
+                                        <span>{post.created_at}</span>
+                                        <span>조회 {post.id}</span>
                                     </div>
                                 </div>
 

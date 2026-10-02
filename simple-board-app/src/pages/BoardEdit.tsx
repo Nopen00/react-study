@@ -1,8 +1,8 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { putBoard } from "../apis/boardApi";
 import BoardForm from "../components/BoardForm";
 import useBoard from "../hooks/useBoard";
-import type { BoardUpSert } from "../types/board";
+import type { BoardUpdate, BoardUpSert } from "../types/board";
 
 const BoardEdit = () => {
 
@@ -10,9 +10,16 @@ const BoardEdit = () => {
     // detial과 같은 코드
     const {id} = useParams();
     const navigate = useNavigate();
+
+    // 주소줄에 ? 뒤에 값 가져오기
+    const [searchParams] = useSearchParams()
+    const currentPage = Number(searchParams.get('page'))||1
+    const size = Number(searchParams.get('size'))||10
+
+
     const {board,loading} = useBoard(id)
 
-    const onSubmit = async (board:BoardUpSert) =>{
+    const onSubmit = async (board:BoardUpdate) =>{
         try {
             if(!id) return
 
@@ -20,7 +27,10 @@ const BoardEdit = () => {
             console.log(result);
 
             // 페이지 이동
-            navigate(`/boards/${id}`)
+            navigate({
+                pathname: `/boards/${id}`,
+                search:`?page=${currentPage}&size=${size}`,
+            })
 
             } catch (error) {
             console.log(error);
