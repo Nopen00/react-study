@@ -1,32 +1,65 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { getBoards } from "../apis/boardApi";
-import useBoards from "../hooks/useBoards";
+import { useAuth } from "../common/AuthContext";
 import Pagination from "../components/Pagination";
-import { current } from "@reduxjs/toolkit";
+import useBoards from "../hooks/useBoards";
+import React, { useState } from "react";
 
 const BoardList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
   const size = Number(searchParams.get("size")) || 10;
+  const criParam = searchParams.get("criteria") || "";
+  const keyParam = searchParams.get("keyword") || "";
 
-  const { data, loading } = useBoards(currentPage, size);
+  const { data, loading } = useBoards(currentPage, size, criParam, keyParam);
   const { total, total_pages } = data;
 
   // 화면에 보여줄 페이지 개수 제한
-  const pageSize = 5
-  const startPage = Math.floor((currentPage -1)/pageSize)* pageSize +1
-  const endPage =Math.min(startPage+ pageSize-1 , total_pages)
+  const pageSize = 5;
+  const startPage = Math.floor((currentPage - 1) / pageSize) * pageSize + 1;
+  const endPage = Math.min(startPage + pageSize - 1, total_pages);
+
+  // 로그임 정보
+  const { isLoggedIn, logout } = useAuth();
+
+  // 검색
+  const [searchForm, setSearchForm] = useState({
+    criteria: criParam,
+    keyword: keyParam,
+  });
+  const { criteria, keyword } = searchForm;
+  const onSearchChage = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setSearchForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // 검색 버튼 클릭 시
+  const onSearchClick = () => {
+    setSearchParams({
+      page: "1",
+      size: String(size),
+      criteria,
+      keyword,
+    });
+  };
+
+  const onPageChage = (page: number) => {
+    setSearchParams({
+      page: String(page),
+      size: String(size),
+      criteria,
+      keyword,
+    });
+  };
 
   if (loading) {
     return <p>Loading....</p>;
   }
-
-  const onPageChage = (page:number) => {
-    setSearchParams({
-        page: String(page),
-        size: String(size),
-    })
-  };
 
   return (
     <div>
@@ -43,31 +76,43 @@ const BoardList = () => {
             다양한 이야기를 자유롭게 나눠보세요.
           </p>
         </div>
-
-        <Link
-          to="/boards/write"
-          className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
-        >
-          ✍️ 글쓰기
-        </Link>
+        {isLoggedIn && (
+          <Link
+            to="/boards/write"
+            className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
+          >
+            ✍️ 글쓰기
+          </Link>
+        )}
       </div>
 
       {/* Search */}
       <div className="mb-6 flex gap-2">
-        <select className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500">
-          <option>제목 + 내용</option>
-          <option>제목</option>
-          <option>작성자</option>
+        <select
+          value={criteria}
+          onChange={onSearchChage}
+          name="criteria"
+          className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500"
+        >
+          <option value={"tc"}>제목 + 내용</option>
+          <option value={"t"}>제목</option>
+          <option value={"w"}>작성자</option>
         </select>
 
         <div className="flex flex-1 overflow-hidden rounded-lg border border-slate-200 bg-white focus-within:border-indigo-500">
           <input
+            value={keyword}
+            onChange={onSearchChage}
+            name="keyword"
             type="text"
             placeholder="검색어를 입력하세요"
             className="flex-1 px-4 py-3 text-sm outline-none"
           />
 
-          <button className="px-5 text-sm font-medium text-slate-600 hover:bg-slate-50">
+          <button
+            onClick={onSearchClick}
+            className="px-5 text-sm font-medium text-slate-600 hover:bg-slate-50"
+          >
             검색
           </button>
         </div>
