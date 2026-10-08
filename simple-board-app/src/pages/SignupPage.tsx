@@ -1,88 +1,158 @@
-
-import { Link } from "react-router-dom";
-
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { signup } from "../apis/userApi";
+import axios from "axios";
 
 const SignupPage = () => {
+  // 에러메세지
+  const [errorMessage, setErrorMessage] = useState("");
 
+  // 이동
+  const navigete = useNavigate();
 
-    return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+  // form => useState()
+  const [form, setForm] = useState({
+    email: "",
+    name: "",
+    password: "",
+    passwordCheck: "",
+  });
 
-            <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm">
+  const { email, name, password, passwordCheck } = form;
 
-                <h1 className="mb-2 text-2xl font-bold">
-                    회원가입
-                </h1>
+  // onChange
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
 
-                <p className="mb-8 text-sm text-gray-500">
-                    Dev Board 계정을 만들어보세요.
-                </p>
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-                <form
-                    className="space-y-5"
-                >
+  // 회원가입 클릭 시 => 로그인 페이지로 이동, 실패 시 에러 메세지 setErrorMessage
+  // password,passwordCheck 값이 동일한지? 동일하지 않다면 이전 비밀번호와 다릅니다. 메세지 보여주기
+  const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@!$*-]).{8,64}$/;
+  const handleSubmit = async (e: React.SubmitEvent) => {
+    e.preventDefault();
 
-                    <div>
-                        <label className="mb-1 block text-sm font-medium">
-                            이메일
-                        </label>
+    if (passwordRegex.test(password)) {
+      setErrorMessage("비밀번호는 8~64자이며 대문자, 소문자, 숫자, 특수문자(@!$*-)를 각각 1자 이상 파함해야 합니다..");
+      return;
+    }
+    if (password !== passwordCheck) {
+      setErrorMessage("이전 비밀번호와 다릅니다.");
+      return;
+    }
 
-                        <input
-                            type="email"
+    try {
+      const result = await signup({ email, password, name });
 
-                            required
-                            className="w-full rounded-lg border px-4 py-3 outline-none focus:border-indigo-500"
-                        />
-                    </div>
+      alert(`${result.user_id}님 ${result.message}`);
+      navigete("/users/signin");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const detail = error.response?.data.detial;
 
-                    <div>
-                        <label className="mb-1 block text-sm font-medium">
-                            비밀번호
-                        </label>
+        if (Array.isArray(detail)) {
+          setErrorMessage(
+            detail[0].msg ?? "비밀번호 입력값이 올바르지 않습니다.",
+          );
+        } else {
+          setErrorMessage(detail ?? "회원가입에 실패했습니다.");
+        }
+      }
+    }
+  };
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm">
+        <h1 className="mb-2 text-2xl font-bold">회원가입</h1>
 
-                        <input
-                            type="password"
+        <p className="mb-8 text-sm text-gray-500">
+          Dev Board 계정을 만들어보세요.
+        </p>
 
-                            required
-                            className="w-full rounded-lg border px-4 py-3 outline-none focus:border-indigo-500"
-                        />
-                    </div>
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          <div>
+            <label className="mb-1 block text-sm font-medium">이메일</label>
 
-                    <div>
-                        <label className="mb-1 block text-sm font-medium">
-                            비밀번호 확인
-                        </label>
+            <input
+              value={email}
+              onChange={handleChange}
+              name="email"
+              type="email"
+              required
+              className="w-full rounded-lg border px-4 py-3 outline-none focus:border-indigo-500"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium">이름</label>
 
-                        <input
-                            type="password"
+            <input
+              value={name}
+              onChange={handleChange}
+              name="name"
+              type="text"
+              required
+              className="w-full rounded-lg border px-4 py-3 outline-none focus:border-indigo-500"
+            />
+          </div>
 
-                            required
-                            className="w-full rounded-lg border px-4 py-3 outline-none focus:border-indigo-500"
-                        />
-                    </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium">비밀번호</label>
 
-                    <button
-                        type="submit"
-                        className="w-full rounded-lg bg-indigo-600 py-3 font-semibold text-white hover:bg-indigo-700"
-                    >
-                        회원가입
-                    </button>
+            <input
+              value={password}
+              onChange={handleChange}
+              name="password"
+              type="password"
+              required
+              className="w-full rounded-lg border px-4 py-3 outline-none focus:border-indigo-500"
+            />
+          </div>
 
-                </form>
+          <div>
+            <label className="mb-1 block text-sm font-medium">
+              비밀번호 확인
+            </label>
 
-                <p className="mt-6 text-center text-sm text-gray-500">
-                    이미 계정이 있으신가요?
-                    <Link
-                        to="/users/signin"
-                        className="font-medium text-indigo-600 hover:underline"
-                    >
-                        로그인
-                    </Link>
-                </p>
-
+            <input
+              value={passwordCheck}
+              onChange={handleChange}
+              name="passwordCheck"
+              type="password"
+              required
+              className="w-full rounded-lg border px-4 py-3 outline-none focus:border-indigo-500"
+            />
+          </div>
+          {/* 가입 실패시 에러 메시지 보여주기 */}
+          {errorMessage && (
+            <div className=" rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+              {errorMessage}
             </div>
-        </div>
-    );
+          )}
+          <button
+            name="submit"
+            type="submit"
+            className="w-full rounded-lg bg-indigo-600 py-3 font-semibold text-white hover:bg-indigo-700"
+          >
+            회원가입
+          </button>
+        </form>
+
+        <p className="mt-6 text-center text-sm text-gray-500">
+          이미 계정이 있으신가요?
+          <Link
+            to="/users/signin"
+            className="font-medium text-indigo-600 hover:underline"
+          >
+            로그인
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default SignupPage;

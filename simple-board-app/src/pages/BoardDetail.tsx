@@ -104,7 +104,7 @@ const BoardDetail = () => {
               {board.user.name}
             </span>
             <span>2026.09.17 14:32</span>
-            <span>조회 42</span>
+            <span>조회 {board.views}</span>
           </div>
         </div>
 

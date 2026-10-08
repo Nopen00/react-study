@@ -3,6 +3,13 @@ export type UserLogin = {
     password:string;
 }
 
+
+export type UserSignup = {
+    email: string;
+    name: string;
+    password:string;
+}
+
 export type User = {
     user_id:number;
     email: string;
